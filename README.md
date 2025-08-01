@@ -248,7 +248,9 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ## 👥 Autores
 
 - **Grupo 2** - Proyecto de Machine Learning
-- **Antonio Cruz** - Desarrollo inicial
+- **Alex Cruz** - Desarrollo inicial
+
+
 
 ## 🙏 Agradecimientos
 
