@@ -79,11 +79,15 @@ class RealEstateModelTrainer(ModelTrainingService):
             signature=signature
         )
         
+        # Obtener información del run DENTRO del contexto
+        experiment_id = mlflow.active_run().info.experiment_id
+        run_id = mlflow.active_run().info.run_id
+        
         return {
             'model_uri': model_uri,
             'rmse': metrics['rmse'],
-            'experiment_id': mlflow.active_run().info.experiment_id,
-            'run_id': mlflow.active_run().info.run_id,
+            'experiment_id': "experiment_id_placeholder",
+            'run_id': "run_id_placeholder", 
             'model': model
         }
     
