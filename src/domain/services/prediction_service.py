@@ -19,6 +19,6 @@ class PredictionService(ABC):
     """Servicio abstracto para predicciones."""
     
     @abstractmethod
-    def predict(self, model: Any, input_data: Dict[str, Any]) -> float:
-        """Realiza una predicción usando el modelo."""
+    def predict_price(self, property_data: Any) -> float:
+        """Realiza una predicción de precio usando el modelo."""
         pass

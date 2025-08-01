@@ -6,12 +6,12 @@ from typing import Optional
 import sys
 import os
 
+
 # Configurar el path para imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
 # Desde src/infrastructure/web, ir a src/
 src_dir = os.path.abspath(os.path.join(current_dir, '..', '..'))
 sys.path.insert(0, src_dir)
-print(f"DEBUG: src_dir = {src_dir}")  # Línea temporal para debug
 
 # Imports del proyecto
 from application.dto.property_dto import PropertyInputDTO
