@@ -254,7 +254,8 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 - **Wilson Guevara Garay** - Desarrollador Python frontend
 - **Ronald Canchanya Valenzuela** - Ingeniero/a MLOps / Backend
 
-
+=======
+>>>>>>> main
 
 ## 🙏 Agradecimientos
 

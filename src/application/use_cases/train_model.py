@@ -1,7 +1,7 @@
 from typing import Dict, Any
-from ..dto.property_dto import TrainingResultDTO
-from ...domain.repositories.model_repository import DataRepository, ModelRepository
-from ...domain.services.prediction_service import ModelTrainingService
+from application.dto.property_dto import TrainingResultDTO
+from domain.repositories.model_repository import DataRepository, ModelRepository
+from domain.services.prediction_service import ModelTrainingService
 
 class TrainModelUseCase:
     """Caso de uso para entrenar modelos de predicción de precios."""
