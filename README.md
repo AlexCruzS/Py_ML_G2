@@ -258,7 +258,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 🙏 Agradecimientos
 
-- Curso de Machine Learning
+- Docente curso de Machine Learning
 - Comunidad de MLflow
 - Documentación de Streamlit
 - Principios de Arquitectura Hexagonal
