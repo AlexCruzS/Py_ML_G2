@@ -6,9 +6,12 @@ from typing import Optional
 import sys
 import os
 
-# Agregar el directorio src al path para imports
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+# Configurar el path para imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.join(current_dir, '..', '..')
+sys.path.insert(0, src_dir)
 
+# Imports del proyecto
 from application.dto.property_dto import PropertyInputDTO
 from application.use_cases.train_model import TrainModelUseCase
 from application.use_cases.predict_price import PredictPriceUseCase
