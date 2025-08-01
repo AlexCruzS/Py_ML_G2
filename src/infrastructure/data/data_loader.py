@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from typing import Tuple
-from ...domain.repositories.model_repository import DataRepository
+from domain.repositories.model_repository import DataRepository
 
 class CSVDataLoader(DataRepository):
     """Implementación del repositorio de datos para archivos CSV."""

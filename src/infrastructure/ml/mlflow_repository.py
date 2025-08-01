@@ -1,7 +1,7 @@
 import mlflow
 import mlflow.sklearn
 from typing import Any, Dict
-from ...domain.repositories.model_repository import ModelRepository
+from domain.repositories.model_repository import ModelRepository
 
 class MLflowModelRepository(ModelRepository):
     """Implementación del repositorio de modelos usando MLflow."""

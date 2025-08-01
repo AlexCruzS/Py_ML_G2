@@ -4,9 +4,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from typing import Dict, Any
-from ...domain.services.prediction_service import ModelTrainingService, PredictionService
-from ...domain.repositories.model_repository import DataRepository, ModelRepository
-from ...domain.entities.property import Property
+from domain.services.prediction_service import ModelTrainingService, PredictionService
+from domain.repositories.model_repository import DataRepository, ModelRepository
+from domain.entities.property import Property
 
 class RealEstateModelTrainer(ModelTrainingService):
     """Implementación del servicio de entrenamiento para modelos inmobiliarios."""

@@ -1,7 +1,7 @@
-from ..dto.property_dto import PropertyInputDTO, PropertyPredictionDTO
-from ...domain.entities.property import Property
-from ...domain.services.prediction_service import PredictionService
-from ...domain.repositories.model_repository import ModelRepository
+from application.dto.property_dto import PropertyInputDTO, PropertyPredictionDTO
+from domain.entities.property import Property
+from domain.services.prediction_service import PredictionService
+from domain.repositories.model_repository import ModelRepository
 
 class PredictPriceUseCase:
     """Caso de uso para predecir precios de propiedades."""
