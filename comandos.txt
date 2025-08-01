@@ -1,0 +1,9 @@
+git add .
+git commit -m "Cambios en readme"
+git push
+
+
+
+Actualización completa (recomendado) de proyecto local visual code:
+git fetch origin
+git pull origin main
