@@ -77,11 +77,7 @@ class RealEstateModelTrainer(ModelTrainingService):
             metrics=metrics,
             input_example=input_example,
             signature=signature
-        )
-        
-        # Obtener información del run DENTRO del contexto
-        experiment_id = mlflow.active_run().info.experiment_id
-        run_id = mlflow.active_run().info.run_id
+        ) 
         
         return {
             'model_uri': model_uri,
