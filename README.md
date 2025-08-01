@@ -248,7 +248,11 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 ## 👥 Autores
 
 - **Grupo 2** - Proyecto de Machine Learning
-- **Antonio Cruz** - Desarrollo inicial
+- **Alex Cruz Salirrosas** - Científico de Datos 
+- **Tirso Villanueva Ortiz** - Arquitecto de Software
+- **Zaida Doria Delgado** - Especialista en Producto / UX
+- **Wilson Guevara Garay** - Desarrollador Python frontend
+- **Ronald Canchanya Valenzuela** - Ingeniero/a MLOps / Backend
 
 ## 🙏 Agradecimientos
 
