@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/acruz/OneDrive%20-%20Finanty%20S.A/Documentos/Py_ML/Py_ML_G2/mlruns/753048648450125781/models/m-e4bc8d79089f4efab1bcfa11e68273a9/artifacts
+creation_timestamp: 1754124363082
+experiment_id: '753048648450125781'
+last_updated_timestamp: 1754124378823
+model_id: m-e4bc8d79089f4efab1bcfa11e68273a9
+model_type: null
+name: random_forest_model
+source_run_id: b86c826f1ace4e4eb08300b3050c557a
+status: 2
+status_message: null
