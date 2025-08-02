@@ -233,6 +233,11 @@ curl http://localhost:5000
 - Asegurar que todas las columnas requeridas estén presentes
 - Revisar encoding del archivo (UTF-8 recomendado)
 
+### 🚀 Docker
+docker rmi py_ml_g2_app
+docker build -t py_ml_g2_app .
+docker run --name proy_ml_gp2 -p 8501:8501 py_ml_g2_app
+
 ## 🤝 Contribución
 
 1. Fork el repositorio
