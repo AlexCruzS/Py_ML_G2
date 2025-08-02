@@ -87,17 +87,8 @@ streamlit run src/infrastructure/web/streamlit_app.py
    - Streamlit: http://localhost:8501
    - MLflow UI: http://localhost:5000
 
-### Opción 2: Línea de Comandos
-
-```bash
-# Ejecutar script principal
-python src/main.py
-
-# Opciones disponibles:
-# 1. Entrenar modelo de ejemplo
-# 2. Realizar predicción de ejemplo  
-# 3. Iniciar aplicación Streamlit
-```
+### Opción 2: Dockerización
+- El proyecto ha sido dockerizado para lograr caracteristicas de portabilidad y podamos llevarlo a los ambientes de pruebas y producción en forma rapida y segura.
 
 ## 📊 Funcionalidades de la Interfaz Web
 
