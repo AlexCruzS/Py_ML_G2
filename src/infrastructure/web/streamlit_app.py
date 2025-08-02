@@ -35,7 +35,6 @@ def load_custom_css():
             
             /* Resetear estilos de Streamlit */
             .stApp {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 min-height: 100vh;
                 font-family: 'Inter', sans-serif;
             }
