@@ -388,7 +388,7 @@ def property_info_page(predict_use_case):
         )
 
     with col6:
-        st.markdown('<label class="custom-label">Valor fiscal o de autovalúo:</label>', unsafe_allow_html=True)
+        st.markdown('<label class="custom-label">Valor fiscal o de autovalúo ($):</label>', unsafe_allow_html=True)
         valor_catastral = st.number_input(
             "",
             min_value=0,
