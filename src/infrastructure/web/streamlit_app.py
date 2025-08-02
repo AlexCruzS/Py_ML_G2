@@ -5,6 +5,14 @@ import plotly.graph_objects as go
 from typing import Optional
 import sys
 import os
+from io import BytesIO
+from reportlab.lib.pagesizes import LETTER
+from reportlab.pdfgen import canvas
+from datetime import datetime
+
+from reportlab.lib import colors
+from reportlab.lib.units import mm
+
 
 # Configurar el path para imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +37,49 @@ st.set_page_config(
 def load_custom_css():
     """Carga los estilos CSS personalizados desde app1.py"""
     st.markdown("""
+        <style>
+            .info-card {
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                background-color: #f9fafb;
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+
+            .info-title {
+                font-weight: 700;
+                font-size: 20px;
+                margin-bottom: 12px;
+                color: #111827;
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 8px;
+            }
+
+            .info-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 32px;
+                margin-top: 12px;
+            }
+
+            .info-col {
+                flex: 1;
+                min-width: 220px;
+            }
+
+            .info-label {
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 12px;
+                color: #6b7280;
+            }
+
+            .info-value {
+                font-size: 15px;
+                color: #111827;
+                margin-top: 4px;
+            }
+        </style>
         <style>
             /* Importar fuentes */
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -88,8 +139,7 @@ def load_custom_css():
             }
 
             .subtitle {
-                color: white;
-                font-size: 20px;
+                font-size: 16px;
                 text-align: center;
                 margin-bottom: 32px;
                 font-weight: 400;
@@ -188,6 +238,31 @@ def load_custom_css():
                 box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3) !important;
             }
 
+            /* Aplicar mismo estilo al botón de descarga */
+            .classButton {
+                width: 100% !important;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+                color: white !important;
+                border: none !important;
+                padding: 16px 24px !important;
+                border-radius: 12px !important;
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                margin-top: 24px !important;
+                min-height: 52px !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .classButton:hover {
+                background: linear-gradient(135deg, #5b21b6, #7c3aed) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+            }
+
+            .classButton:focus {
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3) !important;
+            }
+                
             /* Resultado */
             .result-container {
                 margin-top: 24px;
@@ -266,17 +341,17 @@ def client_info_page():
     """Página 1: Información del cliente (del diseño app1.py)"""
     show_header()
     
-    st.markdown('<label class="custom-label">Cliente:</label>', unsafe_allow_html=True)
-    nombre = st.text_input(   
-        "", 
+    nombre = st.markdown('<label class="custom-label">Cliente:</label>', unsafe_allow_html=True)
+    st.text_input(   
+        "",
         value='',
         placeholder="Apellidos y nombres",
         key="nombre",
         label_visibility="collapsed"
     )
 
-    st.markdown('<label class="custom-label">Dirección:</label>', unsafe_allow_html=True)
-    direccion = st.text_input(   
+    direccion = st.markdown('<label class="custom-label">Dirección:</label>', unsafe_allow_html=True)
+    st.text_input(   
         "", 
         value='',
         placeholder="Urb, dpto, piso",
@@ -295,6 +370,8 @@ def client_info_page():
             key="documento",
             label_visibility="collapsed"
         )
+        if documento and not documento.isdigit():
+            st.warning("El documento debe contener solo números.")
 
     with col2:
         st.markdown('<label class="custom-label">Teléfono/móvil:</label>', unsafe_allow_html=True)
@@ -305,6 +382,8 @@ def client_info_page():
             key="telefono",
             label_visibility="collapsed"
         )
+        if telefono and not telefono.isdigit():
+            st.warning("El teléfono debe contener solo números.")
 
     st.markdown('<label class="custom-label">Correo electrónico:</label>', unsafe_allow_html=True)
     correo = st.text_input(   
@@ -316,13 +395,35 @@ def client_info_page():
     )
     
     if st.button("Continuar"):
-        st.session_state.currentPage = 2
-        st.rerun()
+        campos_invalidos = []
+
+        if not st.session_state["nombre"]:
+            campos_invalidos.append("nombre")
+        if not st.session_state["direccion"]:
+            campos_invalidos.append("direccion")
+        if not st.session_state["documento"]:
+            campos_invalidos.append("documento")
+        if not st.session_state["telefono"]:
+            campos_invalidos.append("telefono")
+        if not st.session_state["correo"]:
+            campos_invalidos.append("correo")
+
+        if campos_invalidos:
+            lista = ", ".join(campos_invalidos)
+            st.error(f"❌ Por favor completa correctamente los siguientes campos: {lista}")
+        else:
+            st.session_state.nombre_guardado = st.session_state.get("nombre", "")
+            st.session_state.documento_guardado = st.session_state.get("documento", "")
+            st.session_state.direccion_guardado = st.session_state.get("direccion", "")
+            st.session_state.telefono_guardado = st.session_state.get("telefono", "")
+            st.session_state.correo_guardado = st.session_state.get("correo", "")
+            st.session_state.currentPage = 2
+            st.rerun()
 
 def property_info_page(predict_use_case):
     """Página 2: Información de la propiedad con integración hexagonal"""
     show_header()
-    
+
     # Primera fila: Ciudad y Tipo de Propiedad
     col1, col2 = st.columns(2)
 
@@ -346,7 +447,7 @@ def property_info_page(predict_use_case):
         tipo_propiedad = st.selectbox(
             "",
             ["Selecciona tipo", "Single Family", "Residential", "Condo", "Two Family", "Three Family", "Four Family"],
-            key="tipo_prop",
+            key="tipo_propiedad",
             label_visibility="collapsed"
         )
 
@@ -355,10 +456,10 @@ def property_info_page(predict_use_case):
 
     with col3:
         st.markdown('<label class="custom-label">Tipo de Residencia:</label>', unsafe_allow_html=True)
-        tipo_residencial = st.selectbox(
+        tipo_residencia = st.selectbox(
             "",
             ["Selecciona subtipo", "Single Family", "Condo", "Townhouse"],
-            key="tipo_res",
+            key="tipo_residencia",
             label_visibility="collapsed"
         )
 
@@ -369,7 +470,7 @@ def property_info_page(predict_use_case):
             min_value=0.0,
             value=0.0,
             placeholder="Ejemplo: 240 m²",
-            key="area",
+            key="area_m2",
             label_visibility="collapsed"
         )
 
@@ -388,13 +489,13 @@ def property_info_page(predict_use_case):
         )
 
     with col6:
-        st.markdown('<label class="custom-label">Valor fiscal o de autovalúo:</label>', unsafe_allow_html=True)
+        st.markdown('<label class="custom-label">Valor fiscal o de autovalúo (€):</label>', unsafe_allow_html=True)
         valor_catastral = st.number_input(
             "",
             min_value=0,
             value=0,
             placeholder="Ejemplo: $ 170,000",
-            key="valor",
+            key="valor_catastral",
             label_visibility="collapsed"
         )
 
@@ -430,7 +531,7 @@ def property_info_page(predict_use_case):
             campos_invalidos.append("ciudad")
         if tipo_propiedad == "Selecciona tipo":
             campos_invalidos.append("tipo de propiedad")
-        if tipo_residencial == "Selecciona subtipo":
+        if tipo_residencia == "Selecciona subtipo":
             campos_invalidos.append("tipo de residencia")
         if area_m2 <= 0:
             campos_invalidos.append("área en m²")
@@ -479,58 +580,166 @@ def property_info_page(predict_use_case):
                 
                 st.session_state.prediccion = resultado_simulado
                 st.session_state.model_version = "Estimación Aproximada"
+                st.session_state.ciudad_guardado = st.session_state.get("ciudad", "—")
+                st.session_state.tipo_propiedad_guardado = st.session_state.get("tipo_propiedad", "—")
+                st.session_state.tipo_residencia_guardado = st.session_state.get("tipo_residencia", "—")
+                st.session_state.area_m2_guardado = st.session_state.get("area_m2", "—")
+                st.session_state.valor_catastral_guardado = st.session_state.get("valor_catastral", "—")
                 st.session_state.currentPage = 3
                 st.rerun()
+
 
 def result_page():
     """Página 3: Resultado de la predicción"""
     show_header()
-    
+
     if "prediccion" in st.session_state:
+
+        nombre = st.session_state.get("nombre_guardado", "—")
+        documento = st.session_state.get("documento_guardado", "—")
+        direccion = st.session_state.get("direccion_guardado", "—")
+        telefono = st.session_state.get("telefono_guardado", "—")
+        correo = st.session_state.get("correo_guardado", "—")
+
+        ciudad = st.session_state.get("ciudad_guardado", "—")
+        tipo_propiedad = st.session_state.get("tipo_propiedad_guardado", "—")
+        tipo_residencia = st.session_state.get("tipo_residencia_guardado", "—")
+
+        area_m2 = st.session_state.get("area_m2_guardado", "—")
+        valor_catastral = st.session_state.get("valor_catastral_guardado", "—")
+        fecha_analisis = st.session_state.get("fecha_analisis") or datetime.now().strftime("%d/%m/%Y")
+
         st.markdown(f"""
-            <div class="result-container">
-                💰 Monto estimado de venta: ${st.session_state.prediccion:,.0f}
+            <div class="info-card">
+                <div class="info-title">Información del Cliente</div>
+                <div class="info-row">
+                    <div class="info-col">
+                        <div class="info-label">Nombre completo</div>
+                        <div class="info-value">{nombre}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Documento de identidad</div>
+                        <div class="info-value">{documento}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Dirección del cliente</div>
+                        <div class="info-value">{direccion}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Teléfono/móvil</div>
+                        <div class="info-value">{telefono}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Correo electrónico</div>
+                        <div class="info-value">{correo}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">Información de la Propiedad</div>
+                <div class="info-row">
+                    <div class="info-col">
+                        <div class="info-label">Ubicación (ciudad)</div>
+                        <div class="info-value">{ciudad}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Tipo de propiedad</div>
+                        <div class="info-value">{tipo_propiedad}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Tipo de residencia</div>
+                        <div class="info-value">{tipo_residencia}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">Características de la Propiedad</div>
+                <div class="info-row">
+                    <div class="info-col">
+                        <div class="info-label">Superficie total</div>
+                        <div class="info-value"> {area_m2} m²</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Valor fiscal</div>
+                        <div class="info-value">€ {valor_catastral}</div>
+                    </div>
+                    <div class="info-col">
+                        <div class="info-label">Fecha de análisis</div>
+                        <div class="info-value">{fecha_analisis}</div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        valor_estimado = st.session_state.prediccion
+        valor_fiscal = st.session_state.valor_catastral_guardado
+        area_m2 = st.session_state.area_m2_guardado
+
+        prima = valor_estimado - valor_fiscal
+        ratio = valor_estimado / valor_fiscal if valor_fiscal else 0
+        precio_m2 = valor_estimado / area_m2 if area_m2 else 0
+
+        st.markdown(f"""
+            <div style="
+                background: linear-gradient(135deg, #7e5bef, #5f46e5);
+                padding: 32px;
+                border-radius: 16px;
+                color: white;
+                text-align: center;
+                margin-top: 20px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            ">
+                <div style="font-size: 18px; font-weight: 500; margin-bottom: 10px;">
+                    Valor Estimado de Mercado
+                </div>
+                <div style="font-size: 48px; font-weight: 700; margin-bottom: 30px;">
+                    €{valor_estimado:,.0f}
+                </div>
+                <div style="display: flex; justify-content: center; gap: 24px;">
+                    <div style="
+                        background-color: rgba(255, 255, 255, 0.15);
+                        padding: 16px 20px;
+                        border-radius: 12px;
+                        flex: 1;
+                        max-width: 200px;
+                    ">
+                        <div style="font-size: 20px; font-weight: 600;">
+                            €{prima:,.0f}
+                        </div>
+                        <div style="font-size: 14px;">Prima sobre Valor Fiscal</div>
+                    </div>
+                    <div style="
+                        background-color: rgba(255, 255, 255, 0.15);
+                        padding: 16px 20px;
+                        border-radius: 12px;
+                        flex: 1;
+                        max-width: 200px;
+                    ">
+                        <div style="font-size: 20px; font-weight: 600;">
+                            {ratio:.2f}
+                        </div>
+                        <div style="font-size: 14px;">Ratio Mercado/Fiscal</div>
+                    </div>
+                    <div style="
+                        background-color: rgba(255, 255, 255, 0.15);
+                        padding: 16px 20px;
+                        border-radius: 12px;
+                        flex: 1;
+                        max-width: 200px;
+                    ">
+                        <div style="font-size: 20px; font-weight: 600;">
+                            €{precio_m2:,.0f}
+                        </div>
+                        <div style="font-size: 14px;">Precio por m²</div>
+                    </div>
+                </div>
             </div>
         """, unsafe_allow_html=True)
-        
-        # Información adicional
-        with st.expander("ℹ️ Detalles de la predicción"):
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write(f"**Modelo utilizado:** {st.session_state.get('model_version', 'N/A')}")
-                st.write(f"**Cliente:** {st.session_state.get('nombre', 'N/A')}")
-                st.write(f"**Ciudad:** {st.session_state.get('ciudad', 'N/A')}")
-            with col2:
-                st.write(f"**Valor tasado:** ${st.session_state.get('valor', 0):,.0f}")
-                st.write(f"**Área:** {st.session_state.get('area', 0):.1f} m²")
-                st.write(f"**Habitaciones:** {st.session_state.get('habitaciones', 'N/A')}")
-        
-        # Métricas de calidad del modelo (si están disponibles)
-        if hasattr(st.session_state, 'model_metrics'):
-            with st.expander("📊 Calidad del Modelo Utilizado"):
-                metrics_col1, metrics_col2, metrics_col3 = st.columns(3)
-                with metrics_col1:
-                    st.metric("🎯 RMSE", f"${st.session_state.model_metrics.get('rmse', 'N/A'):,.0f}")
-                with metrics_col2:
-                    st.metric("📏 MAE", f"${st.session_state.model_metrics.get('mae', 'N/A'):,.0f}")
-                with metrics_col3:
-                    st.metric("📈 R²", f"{st.session_state.model_metrics.get('r2', 'N/A'):.3f}")
-                
-                # Interpretación de la calidad
-                r2_score = st.session_state.model_metrics.get('r2', 0)
-                if r2_score >= 0.90:
-                    st.success("🎉 Modelo de alta calidad - Predicción muy confiable")
-                elif r2_score >= 0.80:
-                    st.info("✅ Modelo de buena calidad - Predicción confiable")
-                elif r2_score >= 0.70:
-                    st.warning("⚠️ Modelo de calidad aceptable - Usar con precaución")
-                else:
-                    st.error("❌ Modelo de baja calidad - Considerar reentrenamiento")
-        
-        # Información sobre el modelo
-       
+
         # Botones de navegación
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns([4,4,0.8])
         with col1:
             if st.button("🔄 Nueva Predicción"):
                 # Limpiar datos pero mantener info del cliente
@@ -548,6 +757,144 @@ def result_page():
                         del st.session_state[key]
                 st.session_state.currentPage = 1
                 st.rerun()
+
+        with col3:
+            st.markdown('<div style="margin-top: 32px;">', unsafe_allow_html=True)
+            st.download_button(
+                label="📄",
+                help="Exportar predicción a PDF",
+                data=generar_pdf(),
+                file_name="prediccion.pdf",
+                mime="application/pdf",
+            )
+            st.markdown('</div>', unsafe_allow_html=True)
+
+
+def generar_pdf():
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=LETTER)
+    width, height = LETTER
+
+    # Márgenes y fuentes
+    margin_x = 40
+    current_y = height - 40
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(colors.HexColor("#5f46e5"))
+    c.drawString(margin_x, current_y, "🧾 Informe de Predicción Inmobiliaria")
+
+    # Cliente
+    current_y -= 30
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_x, current_y, "👤 Información del Cliente")
+    c.setFont("Helvetica", 10)
+    current_y -= 18
+    c.drawString(margin_x, current_y, f"Nombre: {st.session_state.get('nombre_guardado', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Documento: {st.session_state.get('documento_guardado', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Dirección: {st.session_state.get('direccion_guardado', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Teléfono/Móvil: {st.session_state.get('telefono_guardado', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Correo: {st.session_state.get('correo_guardado', '')}")
+
+    # Propiedad
+    current_y -= 30
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_x, current_y, "🏠 Información de la Propiedad")
+    c.setFont("Helvetica", 10)
+    current_y -= 18
+    c.drawString(margin_x, current_y, f"Ciudad: {st.session_state.get('ciudad', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Tipo de Propiedad: {st.session_state.get('tipo_propiedad', '')}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Tipo de Residencia: {st.session_state.get('tipo_residencia', '')}")
+
+    # Características
+    area_m2 = st.session_state.get("area_m2_guardado", 0)
+    valor_fiscal = st.session_state.get("valor_catastral_guardado", 0)
+
+    try:
+        area_m2 = float(area_m2)
+    except (TypeError, ValueError):
+        area_m2 = 0
+
+    try:
+        valor_fiscal = float(valor_fiscal)
+    except (TypeError, ValueError):
+        valor_fiscal = 0
+
+    fecha_analisis = st.session_state.get("fecha_analisis", datetime.now().strftime('%d/%m/%Y'))
+
+    current_y -= 30
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(margin_x, current_y, "📐 Características de la Propiedad")
+    c.setFont("Helvetica", 10)
+    current_y -= 18
+    c.drawString(margin_x, current_y, f"Área (m²): {area_m2}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Valor Fiscal: €{valor_fiscal:,.0f}")
+    current_y -= 14
+    c.drawString(margin_x, current_y, f"Fecha de Análisis: {fecha_analisis}")
+
+    # Resultados
+    valor_estimado = st.session_state.get("prediccion", 0)
+    try:
+        valor_estimado = float(valor_estimado)
+    except (TypeError, ValueError):
+        valor_estimado = 0
+
+    prima = valor_estimado - valor_fiscal
+    ratio = valor_estimado / valor_fiscal if valor_fiscal else 0
+    precio_m2 = valor_estimado / area_m2 if area_m2 else 0
+
+    current_y -= 40
+    c.setFont("Helvetica-Bold", 13)
+    c.setFillColor(colors.HexColor("#5f46e5"))
+    c.drawString(margin_x, current_y, "📊 Valoración del Mercado")
+
+    # Caja principal con valor estimado
+    current_y -= 40
+    box_width = 180
+    box_height = 70
+    box_x = margin_x
+    c.setFillColor(colors.HexColor("#7e5bef"))
+    c.roundRect(box_x, current_y, box_width, box_height, 10, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(colors.white)
+    c.drawCentredString(box_x + box_width/2, current_y + 50, "Valor Estimado")
+    c.setFont("Helvetica-Bold", 20)
+    c.drawCentredString(box_x + box_width/2, current_y + 28, f"€{valor_estimado:,.0f}")
+
+    # Tarjetas secundarias (prima, ratio, precio/m2)
+    small_w = 140
+    small_h = 45
+    spacing = 20
+    small_y = current_y - 10 - small_h
+    small_start_x = margin_x
+
+    card_color = colors.HexColor("#9374eb")
+    text_color = colors.white
+
+    def draw_small_box(x, label, value):
+        c.setFillColor(card_color)
+        c.roundRect(x, small_y, small_w, small_h, 8, fill=True, stroke=False)
+        c.setFillColor(text_color)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawCentredString(x + small_w/2, small_y + 28, value)
+        c.setFont("Helvetica", 9)
+        c.drawCentredString(x + small_w/2, small_y + 12, label)
+
+    draw_small_box(small_start_x, "Prima sobre Valor Fiscal", f"€{prima:,.0f}")
+    draw_small_box(small_start_x + small_w + spacing, "Ratio Mercado/Fiscal", f"{ratio:.2f}")
+    draw_small_box(small_start_x + 2*(small_w + spacing), "Precio por m²", f"€{precio_m2:,.0f}")
+
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+    return buffer
 
 def admin_page(train_use_case, data_repository):
     """Página de administración (entrenamiento y análisis)"""
@@ -751,6 +1098,16 @@ def data_analysis_page(data_repository):
 def main():
     """Función principal mejorada con el diseño de app1.py"""
     
+    for key in ['nombre', 'documento', 'direccion', 'ciudad']:
+        if key not in st.session_state:
+            st.session_state[key] = ""
+
+    if "valor_catastral" not in st.session_state:
+        st.session_state["valor_catastral"] = 0
+
+    if "area_m2" not in st.session_state:
+        st.session_state["area_m2"] = 0
+
     # Cargar estilos CSS personalizados
     load_custom_css()
     

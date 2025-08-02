@@ -1,0 +1,17 @@
+# Ignorar entorno virtual
+venv/
+
+# Ignorar resultados de MLflow
+mlruns/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos de pruebas u outputs temporales
+*.log
+*.tmp
+
+# Configuraciones de VSCode
+.vscode/
