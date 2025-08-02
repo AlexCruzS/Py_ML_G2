@@ -1,0 +1,33 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "Assessed Value",
+      "area_m2",
+      "meses_en_venta",
+      "nro_habitaciones",
+      "nro_pisos",
+      "Property Type_Residential",
+      "Property Type_Single Family"
+    ],
+    "data": [
+      [
+        438600.0,
+        271.0,
+        12.0,
+        7.0,
+        3.0,
+        0.0,
+        1.0
+      ],
+      [
+        515000.0,
+        235.0,
+        2.0,
+        6.0,
+        3.0,
+        0.0,
+        1.0
+      ]
+    ]
+  }
+}
