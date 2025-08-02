@@ -330,7 +330,13 @@ def property_info_page(predict_use_case):
         st.markdown('<label class="custom-label">Ciudad:</label>', unsafe_allow_html=True)
         ciudad = st.selectbox(
             "", 
-            ["Selecciona una ciudad", "Portland", "Windham"],
+            [
+                "Selecciona una ciudad",
+                "Windham", "Montville", "Lisbon", "Wilton", "Westport", 
+                "Enfield", "Waterford", "New Canaan", "Bozrah", "Portland",
+                "Rocky Hill", "Southington", "Bridgeport", "East Lyme", 
+                "Naugatuck", "Essex", "Greenwich"
+            ],
             key="ciudad",
             label_visibility="collapsed"
         )
