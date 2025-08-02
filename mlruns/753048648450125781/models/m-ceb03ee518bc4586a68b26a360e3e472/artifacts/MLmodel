@@ -1,0 +1,40 @@
+artifact_path: file:///C:/Users/acruz/OneDrive%20-%20Finanty%20S.A/Documentos/Py_ML/Py_ML_G2/mlruns/753048648450125781/models/m-ceb03ee518bc4586a68b26a360e3e472/artifacts
+env_vars:
+- MAPBOX_API_KEY
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.9
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 3.1.4
+model_id: m-ceb03ee518bc4586a68b26a360e3e472
+model_size_bytes: 453131
+model_uuid: m-ceb03ee518bc4586a68b26a360e3e472
+prompts: null
+run_id: 7a5ae9e9d19f431996781feecdb75aed
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "float", "name": "Assessed Value", "required": true}, {"type":
+    "float", "name": "area_m2", "required": true}, {"type": "float", "name": "meses_en_venta",
+    "required": true}, {"type": "float", "name": "nro_habitaciones", "required": true},
+    {"type": "float", "name": "nro_pisos", "required": true}, {"type": "float", "name":
+    "Property Type_Residential", "required": true}, {"type": "float", "name": "Property
+    Type_Single Family", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-08-02 00:20:14.588041'
